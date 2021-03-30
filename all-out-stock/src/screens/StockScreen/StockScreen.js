@@ -3,6 +3,7 @@ import { Text, View } from 'react-native'
 import { finnhubClient } from '../../finnhub/config'
 import SearchBar from '../../components/SearchBar/SearchBar';
 import StockCard from '../../components/StockCard/StockCard'
+import styles from './styles';
 
 export default function StockScreen(props) {
     const [symbol, setSymbol] = useState("")
@@ -16,10 +17,14 @@ export default function StockScreen(props) {
         finnhubClient.companyProfile2({'symbol': symbol}, (error, data, response) => {
             setName(data.name)
         })
+
+        finnhubClient.stockSymbols("US", (error, data, response) => {
+            console.log(data)
+        });
     }
 
     return (
-        <View>
+        <View style={styles.root}>
             <SearchBar
                 term={symbol} 
                 onTermChange={(text) => setSymbol(text)}
@@ -28,6 +33,7 @@ export default function StockScreen(props) {
                 quote &&
                 <StockCard
                     company={name}
+                    current_price={quote.c}
                     average_price={(quote.h + quote.l)/2}
                 />
             }

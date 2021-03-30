@@ -9,5 +9,7 @@ export default StyleSheet.create({
     },
     company: {
         marginBottom: 10,
+        fontSize: 18,
+        fontWeight: "bold"
     },
 });
