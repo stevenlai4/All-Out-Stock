@@ -28,7 +28,7 @@ export default function LoginScreen({navigation}) {
                             return;
                         }
                         const user = firestoreDocument.data()
-                        navigation.navigate('Home')
+                        navigation.navigate('Portfolio')
                     })
                     .catch(error => {
                         alert(error)
@@ -44,10 +44,7 @@ export default function LoginScreen({navigation}) {
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
-                <Image
-                    style={styles.logo}
-                    source={require('../../../assets/icon.png')}
-                />
+                <Text style={[styles.logo, styles.centerText]}>All Out Stock</Text>
                 <TextInput
                     style={styles.input}
                     placeholder='E-mail'
