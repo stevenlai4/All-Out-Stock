@@ -11,3 +11,6 @@
     * Register/Login Screen
     * Search/Quote Screen
     * Navigation link to Log Out
+
+## Prototypes Images
+* <img src = "Images/Home.png" alt = "Home Page">
