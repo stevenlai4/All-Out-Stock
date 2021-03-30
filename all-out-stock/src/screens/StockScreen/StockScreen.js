@@ -1,16 +1,13 @@
 import React, {useState} from 'react'
 import { Text, View } from 'react-native'
-import config from "../../../config.json"
+import { finnhubClient } from '../../finnhub/config'
 
 export default function StockScreen(props) {
-    const finnhub = require('finnhub');
     const [keyword, setKeyword] = useState("")
-
-    const api_key = finnhub.ApiClient.instance.authentications['api_key'];
-    api_key.apiKey = config.FINNHUB_API_KEY
-    const finnhubClient = new finnhub.DefaultApi()
-
     
+    finnhubClient.quote("AAPL", (error, data, response) => {
+        console.log(data)
+    });
 
     return (
         <View>
