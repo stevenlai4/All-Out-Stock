@@ -8,17 +8,23 @@ export default function StockScreen(props) {
 
     useEffect(()=>{
         setKeyword("IBM")    
+    },[])
+
+    useEffect(()=>{
         finnhubClient.quote(keyword, (error, data, response) => {
             setQuote(data)
         })
-    },[])
+    },[keyword])
 
     console.log(quote)
 
     return (
         <View>
             <Text>{keyword}</Text>
-            <Text>Current Price: {quote.c}</Text>
+            {
+                quote &&
+                <Text>Current Price: {quote.c}</Text>
+            }
         </View>
     )
 }
