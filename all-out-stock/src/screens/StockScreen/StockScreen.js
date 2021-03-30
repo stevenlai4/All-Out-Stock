@@ -1,27 +1,20 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Text, View } from 'react-native'
 import config from "../../../config.json"
-import axios from "axios"
 
 export default function StockScreen(props) {
-    const axios = require('axios')
-    const BASE_URL = "https://finnhub.io/api/v1"
-    var keyword = "cineplex"
+    const finnhub = require('finnhub');
+    const [keyword, setKeyword] = useState("")
 
-    axios.get(`${BASE_URL}/search?q=${keyword}&token=${config.FINNHUB_API_KEY}`)
-    .then(function(response){
-        var bloop = response.data
-        console.log(bloop)
+    const api_key = finnhub.ApiClient.instance.authentications['api_key'];
+    api_key.apiKey = config.FINNHUB_API_KEY
+    const finnhubClient = new finnhub.DefaultApi()
 
-    })
-    .catch(function (error) {
-        console.log(error);
-      })
+    
 
     return (
         <View>
             <Text>This is the Stock Screen</Text>
-            
         </View>
     )
 }
