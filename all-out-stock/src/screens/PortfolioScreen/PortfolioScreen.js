@@ -37,6 +37,9 @@ export default function PortfolioScreen({ navigation }) {
                     </TouchableOpacity>
                 )}
             />
+            <TouchableOpacity onPress={()=>{props.navigation.navigate('Stock')}}>
+                <Text>Click here for Stocks</Text>
+            </TouchableOpacity>
         </View>
     );
 }
