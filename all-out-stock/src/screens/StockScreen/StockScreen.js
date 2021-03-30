@@ -1,26 +1,36 @@
 import React, {useState,useEffect} from 'react'
-import { Text, View } from 'react-native'
+import { Text, TextInput, View } from 'react-native'
 import { finnhubClient } from '../../finnhub/config'
 
 export default function StockScreen(props) {
-    const [keyword, setKeyword] = useState("")
+    const [symbol, setSymbol] = useState("")
     const [quote, setQuote] = useState({})
-
-    useEffect(()=>{
-        setKeyword("IBM")    
-    },[])
-
-    useEffect(()=>{
-        finnhubClient.quote(keyword, (error, data, response) => {
+    
+    const searchApi = () => {
+        finnhubClient.quote(symbol, (error, data, response) => {
             setQuote(data)
         })
-    },[keyword])
+    }
 
+    useEffect(()=>{
+        searchApi()
+    },[symbol])
+
+    console.log(symbol)
     console.log(quote)
 
     return (
         <View>
-            <Text>{keyword}</Text>
+            <Text>Stock Symbol:</Text>
+            <TextInput
+                placeholder='Stock'
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setSymbol(text)}
+                value={symbol}
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+            />
+            <Text>{symbol}</Text>
             {
                 quote &&
                 <Text>Current Price: {quote.c}</Text>
