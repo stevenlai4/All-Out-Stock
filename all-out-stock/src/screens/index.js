@@ -6,4 +6,6 @@ export { default as RegistrationScreen } from './RegistrationScreen/Registration
 
 export { default as PortfolioScreen } from './PortfolioScreen/PortfolioScreen';
 
-export  {default as StockScreen } from './StockScreen/StockScreen'
+export { default as StockScreen } from './StockScreen/StockScreen';
+
+export { default as StockDetailScreen } from './StockDetailScreen/StockDetailScreen';

@@ -4,7 +4,7 @@ import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import StockCard from '../../components/StockCard/StockCard';
 import styles from './styles';
 
-export default function PortfolioScreen() {
+export default function PortfolioScreen({ navigation }) {
     const [user, setUser] = useState({ cash: 50000 });
     const [stocks, setStocks] = useState([
         { company: 'Air Canada', average_price: 20.64 },
@@ -27,10 +27,12 @@ export default function PortfolioScreen() {
             <Text style={styles.portfolioText}>Portfolio:</Text>
             <FlatList
                 showsVerticalScrollIndicator={false}
-                keyExtractor={(data) => data}
+                keyExtractor={(data) => data.company}
                 data={stocks}
                 renderItem={({ item }) => (
-                    <TouchableOpacity key={item.company}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('StockDetail', item)}
+                    >
                         <StockCard stock={item} />
                     </TouchableOpacity>
                 )}
