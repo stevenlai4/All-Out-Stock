@@ -1,17 +1,24 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import { Text, View } from 'react-native'
 import { finnhubClient } from '../../finnhub/config'
 
 export default function StockScreen(props) {
     const [keyword, setKeyword] = useState("")
-    
-    finnhubClient.quote("AAPL", (error, data, response) => {
-        console.log(data)
-    });
+    const [quote, setQuote] = useState({})
+
+    useEffect(()=>{
+        setKeyword("IBM")    
+        finnhubClient.quote(keyword, (error, data, response) => {
+            setQuote(data)
+        })
+    },[])
+
+    console.log(quote)
 
     return (
         <View>
-            <Text>This is the Stock Screen</Text>
+            <Text>{keyword}</Text>
+            <Text>Current Price: {quote.c}</Text>
         </View>
     )
 }
