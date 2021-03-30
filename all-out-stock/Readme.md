@@ -13,4 +13,20 @@
     * Navigation link to Log Out
 
 ## Prototypes Images
-* <img src = "Images/Home.png" alt = "Home Page">
+* Register Screen
+<img src = "Images/Register.png" alt = "Register Screen">
+
+* Home Screen
+<img src = "Images/Home.png" alt = "Home Screen">
+
+* Stock Screen
+<img src = "Images/Stock.png" alt = "Stock Screen">
+
+* Navigation
+<img src = "Images/Navigation.png" alt = "Navigation Screen">
+
+* Funds Screen
+<img src = "Images/Fund.png" alt = "Funds Screen">
+
+* Profile Screen
+<img src = "Images/Profile.png" alt = "Profile Screen">
