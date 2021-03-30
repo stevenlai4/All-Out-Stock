@@ -2,15 +2,10 @@
 
 ## Platform Choice: React-Native
 
-## MileStone 1
-* Creating prototype 
-* Authentication (Register, Login, Logout)
-    * Consume a Stock Price API (like finnhub.io and/or alphavantage.co)
-    * Search and display the current stock price for a given symbol
-* User Interface
-    * Register/Login Screen
-    * Search/Quote Screen
-    * Navigation link to Log Out
+## Dependences for installation
+* yarn add firebase 
+* yarn add @react-navigation/native && yarn add @react-navigation/stack && expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
+* yarn add react-native-keyboard-aware-scroll-view base-64
 
 ## Prototypes Images
 * Register Screen
