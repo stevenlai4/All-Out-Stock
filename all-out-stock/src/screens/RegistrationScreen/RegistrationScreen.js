@@ -35,7 +35,7 @@ export default function RegistrationScreen({navigation}) {
                     .doc(uid)
                     .set(data)
                     .then(() => {
-                        navigation.navigate('Home', {user: data})
+                        navigation.navigate('Portfolio', {user: data})
                     })
                     .catch((error) => {
                         alert(error)
@@ -51,10 +51,7 @@ export default function RegistrationScreen({navigation}) {
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
-                <Image
-                    style={styles.logo}
-                    source={require('../../../assets/icon.png')}
-                />
+                <Text style={[styles.logo, styles.centerText]}>All Out Stock</Text>
                 <TextInput
                     style={styles.input}
                     placeholder='Full Name'

@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
     LoginScreen,
-    HomeScreen,
     RegistrationScreen,
     PortfolioScreen,
     StockScreen,
@@ -61,7 +60,6 @@ export default function App() {
                         name="Registration"
                         component={RegistrationScreen}
                     />
-                    <Stack.Screen name="Home" component={HomeScreen} />
                     <Stack.Screen
                         name="Portfolio"
                         component={PortfolioScreen}
