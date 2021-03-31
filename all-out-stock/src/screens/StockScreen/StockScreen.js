@@ -17,10 +17,6 @@ export default function StockScreen(props) {
         finnhubClient.companyProfile2({'symbol': symbol}, (error, data, response) => {
             setName(data.name)
         })
-
-        finnhubClient.stockSymbols("US", (error, data, response) => {
-            console.log(data)
-        });
     }
 
     return (
