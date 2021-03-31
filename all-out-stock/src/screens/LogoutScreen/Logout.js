@@ -1,11 +1,17 @@
 import React from 'react'
+import { View } from 'react-native'
+import {LoginScreen} from '../index'
 import { firebase } from '../../firebase/config'
 
-export default function SignOut() {
+export default function SignOut({navigation}) {
     firebase.auth().signOut().then(() => {
-    // Sign-out successful.
+      navigation.navigate('Login', {user: null})
   }).catch((error) => {
-    // An error happened.
+      alert(error)
   });
-  return
+  return (
+    <View>
+      <LoginScreen />
+    </View>
+  )
 }
