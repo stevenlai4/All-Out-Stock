@@ -7,3 +7,5 @@ export { default as PortfolioScreen } from './PortfolioScreen/PortfolioScreen';
 export { default as StockScreen } from './StockScreen/StockScreen';
 
 export { default as StockDetailScreen } from './StockDetailScreen/StockDetailScreen';
+
+export { default as NavigationScreen } from './NavigationScreen/NavigationScreen';
