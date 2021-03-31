@@ -21,6 +21,7 @@ export default function StockScreen(props) {
 
     return (
         <View style={styles.root}>
+            <Text style={[styles.logo, styles.centerText]}>All Out Stock</Text>
             <SearchBar
                 term={symbol} 
                 onTermChange={(text) => setSymbol(text)}
