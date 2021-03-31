@@ -8,7 +8,7 @@ import {
     PortfolioScreen,
     StockScreen,
     StockDetailScreen,
-    NavigationScreen
+    NavigationScreen,
 } from './src/screens';
 import { decode, encode } from 'base-64';
 if (!global.btoa) {
@@ -19,7 +19,6 @@ if (!global.atob) {
 }
 import { firebase } from './src/firebase/config';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 
 const Stack = createStackNavigator();
 
@@ -57,19 +56,13 @@ export default function App() {
     return (
         <SafeAreaProvider>
             <NavigationContainer>
-                <Stack.Navigator screenOptions={{headerShown: false}}>
-                    
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="Login" component={LoginScreen} />
                     <Stack.Screen
                         name="Registration"
                         component={RegistrationScreen}
                     />
-                    <Stack.Screen name = "Root" component={NavigationScreen} />
-                    <Stack.Screen
-                        name="Portfolio"
-                        component={PortfolioScreen}
-                    />
-                    <Stack.Screen name="Stock" component={StockScreen} />
+                    <Stack.Screen name="Root" component={NavigationScreen} />
                     <Stack.Screen
                         name="StockDetail"
                         component={StockDetailScreen}
