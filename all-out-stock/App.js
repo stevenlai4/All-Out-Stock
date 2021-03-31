@@ -73,10 +73,13 @@ export default function App() {
                         component={StockDetailScreen}
                     />
                 </Stack.Navigator>
+                {/* <Stack.Navigator screenOptions={{headerShown: false}}>
+                    <Stack.Screen name = "Root" component={NavigationScreen} />
+                </Stack.Navigator> */}
             </NavigationContainer>
-            <NavigationContainer>
+             <NavigationContainer>
                 <Stack.Navigator screenOptions={{headerShown: false}}>
-                    <Stack.Screen name = "Root" component={{NavigationScreen}} />
+                    <Stack.Screen name = "Root" component={NavigationScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </SafeAreaProvider>
