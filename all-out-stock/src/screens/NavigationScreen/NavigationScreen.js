@@ -9,6 +9,7 @@ export default function NavigationScreen() {
         <Drawer.Navigator initialRouteName="Portfolio">
             <Drawer.Screen name = "Portfolio" component={PortfolioScreenNavigator} />
             <Drawer.Screen name = "Stock" component={StockScreenNavigator} />
+            <Drawer.Screen name = "Logout" component={LogoutScreenNavigator} />
         </Drawer.Navigator>
     )
 }
@@ -36,5 +37,16 @@ function StockScreenNavigator() {
             <StockScreenStack.Screen name ="Stock" component={StockScreen} options = {{headerTitle: 'Stock Purchase', headerLeft: () => <MenuIcon />}}
             />
         </StockScreenStack.Navigator>
+    )
+}
+
+import SignOut from '../LogoutScreen/Logout'
+
+const LogoutScreenstack = createStackNavigator()
+function LogoutScreenNavigator() {
+    return(
+        <LogoutScreenstack.Navigator>
+            <LogoutScreenstack.Screen name = 'Logout' component={SignOut} options = {{headerTitle: 'Logout'}} />
+        </LogoutScreenstack.Navigator>
     )
 }
