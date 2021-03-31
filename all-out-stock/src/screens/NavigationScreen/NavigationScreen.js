@@ -33,7 +33,7 @@ const StockScreenStack = createStackNavigator()
 function StockScreenNavigator() {
     return(
         <StockScreenStack.Navigator>
-            <StockScreenStack.Screen name ="Stock" component={StockScreen} options = {{headerTitle: 'Stock Purchase'}}
+            <StockScreenStack.Screen name ="Stock" component={StockScreen} options = {{headerTitle: 'Stock Purchase', headerLeft: () => <MenuIcon />}}
             />
         </StockScreenStack.Navigator>
     )

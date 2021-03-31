@@ -28,7 +28,7 @@ export default function LoginScreen({navigation}) {
                             return;
                         }
                         const user = firestoreDocument.data()
-                        navigation.navigate('Portfolio')
+                        navigation.navigate('Root')
                     })
                     .catch(error => {
                         alert(error)

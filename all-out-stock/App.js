@@ -57,12 +57,14 @@ export default function App() {
     return (
         <SafeAreaProvider>
             <NavigationContainer>
-                <Stack.Navigator>
+                <Stack.Navigator screenOptions={{headerShown: false}}>
+                    
                     <Stack.Screen name="Login" component={LoginScreen} />
                     <Stack.Screen
                         name="Registration"
                         component={RegistrationScreen}
                     />
+                    <Stack.Screen name = "Root" component={NavigationScreen} />
                     <Stack.Screen
                         name="Portfolio"
                         component={PortfolioScreen}
@@ -72,14 +74,6 @@ export default function App() {
                         name="StockDetail"
                         component={StockDetailScreen}
                     />
-                </Stack.Navigator>
-                {/* <Stack.Navigator screenOptions={{headerShown: false}}>
-                    <Stack.Screen name = "Root" component={NavigationScreen} />
-                </Stack.Navigator> */}
-            </NavigationContainer>
-             <NavigationContainer>
-                <Stack.Navigator screenOptions={{headerShown: false}}>
-                    <Stack.Screen name = "Root" component={NavigationScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </SafeAreaProvider>
