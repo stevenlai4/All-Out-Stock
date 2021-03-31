@@ -1,19 +1,29 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
-import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
 import styles from './styles';
 import firebase from 'firebase'
 
 export default function TransactionScreen(props) {
     const [share, setShare] = useState(0)
+    const [avgPrice, setAvgPrice] = useState(0)
     const stock = props.route.params.stock;
     const isBuying = props.route.params.isBuying
     
     const db = firebase.firestore()
     const uid = "jzWwiZ0QMKfKp3OHAhoxWGqoQWB2"
-    
+
+    var totalShare = 0
+    var totalPrice = 0
+
     const handleTransaction = async () => {
-        const transaction = await db.collection("users").doc(uid).collection("transaction").add({name: stock.name, price: stock.quote.c, share: share});
+        
+        await db.collection("users").doc(uid).collection("transaction").add({name: stock.name, price: stock.quote.c, share: parseInt(share)});
+        const transactions = await db.collection("users").doc(uid).collection("transaction").get({name: stock.name})
+        transactions.forEach((transaction) => {
+            totalShare += transaction.data().share
+            totalPrice += transaction.data().price * transaction.data().share
+        })
+        setAvgPrice(totalPrice/totalShare)
     }
 
     return (
@@ -27,11 +37,12 @@ export default function TransactionScreen(props) {
                 {stock.name} Price: ${stock.quote.c}
             </Text>
             <Text>
-                Estimated cost: $0.00
+                Average cost/share: ${avgPrice}
             </Text>
             <Text>
                 Available to trade: $100
             </Text>
+
 
             <View style={styles.btnContainer}>
                 {
