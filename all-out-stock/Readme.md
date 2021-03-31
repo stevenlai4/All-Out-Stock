@@ -27,3 +27,6 @@
 
 * Profile Screen
 <img src = "Images/Profile.png" alt = "Profile Screen">
+
+* Buy and Sell Screen
+<img src = "Images/Buy.png" alt = "Buy Screen">
