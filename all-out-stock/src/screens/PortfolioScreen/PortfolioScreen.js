@@ -31,19 +31,27 @@ export default function PortfolioScreen({ navigation }) {
                 data={stocks}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('StockDetail', item)}
+                        onPress={() =>
+                            navigation.navigate('StockDetail', {
+                                name: item.name,
+                                quote: {
+                                    c: 22.35,
+                                    o: 21.24,
+                                    h: 24.22,
+                                    l: 20.11,
+                                    pc: 23.0,
+                                },
+                            })
+                        }
                     >
-                        <StockCard stock={item} />
+                        <StockCard
+                            name={item.name}
+                            current_price={item.curret_price}
+                            average_price={item.average_price}
+                        />
                     </TouchableOpacity>
                 )}
             />
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate('Stock');
-                }}
-            >
-                <Text>Click here for Stocks</Text>
-            </TouchableOpacity>
         </View>
     );
 }
