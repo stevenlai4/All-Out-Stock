@@ -7,9 +7,9 @@ export default StyleSheet.create({
         marginVertical: 10,
         padding: 20,
     },
-    company: {
+    name: {
         marginBottom: 10,
         fontSize: 18,
-        fontWeight: "bold"
+        fontWeight: 'bold',
     },
 });
