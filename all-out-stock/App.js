@@ -9,6 +9,7 @@ import {
     StockScreen,
     StockDetailScreen,
     NavigationScreen,
+    TransactionScreen,
 } from './src/screens';
 import { decode, encode } from 'base-64';
 if (!global.btoa) {
@@ -67,6 +68,7 @@ export default function App() {
                         name="StockDetail"
                         component={StockDetailScreen}
                     />
+                    <Stack.Screen name="Transaction" component={TransactionScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </SafeAreaProvider>
