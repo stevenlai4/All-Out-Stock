@@ -4,7 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 
 const Drawer = createDrawerNavigator();
 
-export default function DrawerNavigator() {
+export default function NavigationScreen() {
     return(
         <Drawer.Navigator initialRouteName="Portfolio">
             <Drawer.Screen name = "Portfolio" component={PortfolioScreenNavigator} />
