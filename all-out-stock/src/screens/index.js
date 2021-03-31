@@ -9,3 +9,5 @@ export { default as StockScreen } from './StockScreen/StockScreen';
 export { default as StockDetailScreen } from './StockDetailScreen/StockDetailScreen';
 
 export { default as NavigationScreen } from './NavigationScreen/NavigationScreen';
+
+export {default as Logout} from './LogoutScreen/Logout';

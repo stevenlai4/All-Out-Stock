@@ -13,7 +13,8 @@ export default StyleSheet.create({
         fontSize: 45,
         marginVertical: 35,
         textAlign: 'center',
-        margin: 50
+        margin: 50,
+        paddingTop: 50
     },
     input: {
         height: 48,
