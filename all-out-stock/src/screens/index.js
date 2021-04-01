@@ -11,3 +11,5 @@ export { default as StockDetailScreen } from './StockDetailScreen/StockDetailScr
 export { default as NavigationScreen } from './NavigationScreen/NavigationScreen';
 
 export {default as Logout} from './LogoutScreen/Logout';
+
+export {default as TransactionScreen} from './TransactionScreen/TransactionScreen';
