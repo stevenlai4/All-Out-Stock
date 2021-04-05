@@ -20,25 +20,25 @@ export default function TransactionScreen(props) {
     const handleBuyTransaction = async () => {
         
         await db.collection("users").doc(uid).collection("transaction").add({name: stock.name, price: stock.quote.c, share: parseInt(share)});
-        const transactions = await db.collection("users").doc(uid).collection("transaction").get({name: stock.name})
+        const transactions = await db.collection("users").doc(uid).collection("transaction").where("name", "==", stock.name).get()
         transactions.forEach((transaction) => {
             totalShare += transaction.data().share
             totalPrice += transaction.data().price * transaction.data().share
         })
         setAvgPrice(totalPrice/totalShare)
-        setTrade(totalTrade-totalPrice)
+        setTrade(totalTrade-=totalPrice)
     }
 
     const handleSellTransaction = async () => {
         
         await db.collection("users").doc(uid).collection("transaction").add({name: stock.name, price: stock.quote.c, share: parseInt(-share)});
-        const transactions = await db.collection("users").doc(uid).collection("transaction").get({name: stock.name})
+        const transactions = await db.collection("users").doc(uid).collection("transaction").where("name", "==", stock.name).get()
         transactions.forEach((transaction) => {
             totalShare += transaction.data().share
             totalPrice += transaction.data().price * transaction.data().share
         })
         setAvgPrice(totalPrice/totalShare)
-        setTrade(totalTrade-totalPrice)
+        setTrade(totalTrade-=totalPrice)
     }
 
     return (
