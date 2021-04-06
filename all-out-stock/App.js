@@ -27,6 +27,10 @@ export default function App() {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
 
+    if(user){
+        console.log('User Email: ', user.email);
+    }
+
     // if (loading) {
     //   return (
     //     <></>
