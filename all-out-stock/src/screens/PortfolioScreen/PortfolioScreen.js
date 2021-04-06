@@ -1,22 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import StockCard from '../../components/StockCard/StockCard';
 import styles from './styles';
+import firebase from 'firebase';
+import { finnhubClient } from '../../finnhub/config';
+import axios from 'axios';
 
 export default function PortfolioScreen({ navigation }) {
-    const [user, setUser] = useState({ cash: 50000 });
-    const [stocks, setStocks] = useState([
-        { name: 'Air Canada', curret_price: 21.55, average_price: 20.64 },
-        { name: 'Cineplex', curret_price: 21.55, average_price: 22.41 },
-        { name: 'Nike', curret_price: 21.55, average_price: 20.24 },
-        { name: 'Amazon', curret_price: 21.55, average_price: 20.25 },
-        { name: 'Google', curret_price: 21.55, average_price: 20.26 },
-        { name: 'Fackebook', curret_price: 21.55, average_price: 28.24 },
-        { name: 'Shopify', curret_price: 21.55, average_price: 29.24 },
-        { name: 'Bestbuy', curret_price: 21.55, average_price: 21.24 },
-        { name: 'Roots', curret_price: 21.55, average_price: 26.24 },
-    ]);
+    const [user] = useState({
+        id: 'jzWwiZ0QMKfKp3OHAhoxWGqoQWB2',
+        fullName: 'Anthony Chan',
+        email: 'anthonychan_74@hotmail.com',
+        cash: 50000,
+    });
+    //const [quote, setQuote] = useState({});
+    const [positions, setPositions] = useState([]);
+    const db = firebase.firestore();
+
+    // CDM
+    useEffect(() => {
+        db.collection('users')
+            .doc(user.id)
+            .collection('transaction')
+            .onSnapshot((querySnapshot) => {
+                const tempPositions = [];
+
+                querySnapshot.forEach((docSnapshot) => {
+                    tempPositions.push({ ...docSnapshot.data() });
+                });
+
+                setPositions(tempPositions);
+            });
+    }, []);
+
+    // Fetch stock api
+    const searchApi = async (symbol) => {
+        try {
+            const response = await axios.get(
+                `https://finnhub.io/api/v1/quote?symbol=${symbol}`,
+                {
+                    headers: {
+                        'X-Finnhub-Token': 'c1hm37n48v6q1s3o4krg',
+                    },
+                }
+            );
+
+            if (response) {
+                return response.data;
+            }
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    //const createStockCard = async ({ item }) => {};
 
     return (
         <View style={styles.root}>
@@ -27,30 +65,34 @@ export default function PortfolioScreen({ navigation }) {
             <Text style={styles.portfolioText}>Portfolio:</Text>
             <FlatList
                 showsVerticalScrollIndicator={false}
-                keyExtractor={(data) => data.name}
-                data={stocks}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        onPress={() =>
-                            navigation.navigate('StockDetail', {
-                                name: item.name,
-                                quote: {
-                                    c: 22.35,
-                                    o: 21.24,
-                                    h: 24.22,
-                                    l: 20.11,
-                                    pc: 23.0,
-                                },
-                            })
-                        }
-                    >
-                        <StockCard
-                            name={item.name}
-                            current_price={item.curret_price}
-                            average_price={item.average_price}
-                        />
-                    </TouchableOpacity>
-                )}
+                keyExtractor={(data) =>
+                    `${data.name} ${data.price} ${data.share}`
+                }
+                data={positions}
+                renderItem={async ({ item }) => {
+                    try {
+                        const quote = await searchApi(item.symbol);
+
+                        return (
+                            <TouchableOpacity
+                                onPress={() =>
+                                    navigation.navigate('StockDetail', {
+                                        name: item.name,
+                                        quote,
+                                    })
+                                }
+                            >
+                                <StockCard
+                                    name={item.name}
+                                    current_price={quote.c}
+                                    average_price={25}
+                                />
+                            </TouchableOpacity>
+                        );
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }}
             />
         </View>
     );
