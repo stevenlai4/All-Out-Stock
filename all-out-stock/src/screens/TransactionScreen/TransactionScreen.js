@@ -16,6 +16,8 @@ export default function TransactionScreen(props) {
     var totalShare = 0
     var totalPrice = 0
     var totalTrade = 50000
+    var data = null
+    var holdShare = 0
 
     useEffect(() => {
         const currUser = firebase.auth().currentUser;
@@ -27,24 +29,44 @@ export default function TransactionScreen(props) {
         
         await db.collection("users").doc(uid).collection("transaction").add({name: stock.name, price: stock.quote.c, share: parseInt(share)});
         const transactions = await db.collection("users").doc(uid).collection("transaction").where("name", "==", stock.name).get()
+        const transactionSummarys = await db.collection("users").doc(uid).collection("transactionSummary").where("name", "==", stock.name).get()
         transactions.forEach((transaction) => {
             totalShare += transaction.data().share
             totalPrice += transaction.data().price * transaction.data().share
         })
         setAvgPrice(totalPrice/totalShare)
         setTrade(totalTrade-=totalPrice)
+        transactionSummarys.forEach((transactionSummary) => {
+            data = transactionSummary.data().name
+        })
+        if ( data === null) {
+            await db.collection("users").doc(uid).collection("transactionSummary").doc(stock.name).set({name: stock.name, avgPrice: avgPrice, shareTotal: totalShare});
+        }
+        else {
+            await db.collection("users").doc(uid).collection("transactionSummary").doc(stock.name).update({avgPrice: avgPrice, shareTotal: totalShare});
+        }
     }
 
     const handleSellTransaction = async () => {
         
-        await db.collection("users").doc(uid).collection("transaction").add({name: stock.name, price: stock.quote.c, share: parseInt(-share)});
-        const transactions = await db.collection("users").doc(uid).collection("transaction").where("name", "==", stock.name).get()
-        transactions.forEach((transaction) => {
-            totalShare += transaction.data().share
-            totalPrice += transaction.data().price * transaction.data().share
+        const transactionSummarys = await db.collection("users").doc(uid).collection("transactionSummary").where("name", "==", stock.name).get()
+        transactionSummarys.forEach((transactionSummary) => {
+            holdShare = transactionSummary.data().shareTotal
         })
-        setAvgPrice(totalPrice/totalShare)
-        setTrade(totalTrade-=totalPrice)
+        if ( holdShare >= share) {
+            await db.collection("users").doc(uid).collection("transaction").add({name: stock.name, price: stock.quote.c, share: parseInt(-share)});
+            const transactions = await db.collection("users").doc(uid).collection("transaction").where("name", "==", stock.name).get()
+            transactions.forEach((transaction) => {
+                totalShare += transaction.data().share
+                totalPrice += transaction.data().price * transaction.data().share
+            })
+            setAvgPrice(totalPrice/totalShare)
+            setTrade(totalTrade-=totalPrice)
+            await db.collection("users").doc(uid).collection("transactionSummary").doc(stock.name).update({avgPrice: avgPrice, shareTotal: totalShare});
+        }
+        else {
+            alert("You don't have enough share to sell")
+        }
     }
 
     return (
