@@ -37,6 +37,7 @@ export default function StockScreen(props) {
                         props.navigation.navigate('StockDetail', {
                             name,
                             quote,
+                            symbol,
                         })
                     }
                 >

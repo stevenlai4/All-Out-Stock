@@ -5,56 +5,51 @@ import StockCard from '../../components/StockCard/StockCard';
 import styles from './styles';
 import firebase from 'firebase';
 import { finnhubClient } from '../../finnhub/config';
-import axios from 'axios';
 
 export default function PortfolioScreen({ navigation }) {
-    const [user] = useState({
-        id: 'jzWwiZ0QMKfKp3OHAhoxWGqoQWB2',
-        fullName: 'Anthony Chan',
-        email: 'anthonychan_74@hotmail.com',
-        cash: 50000,
-    });
-    //const [quote, setQuote] = useState({});
     const [positions, setPositions] = useState([]);
+    const [quotes, setQuotes] = useState([]);
     const db = firebase.firestore();
 
     // CDM
     useEffect(() => {
+        const currentUser = firebase.auth().currentUser;
+
         db.collection('users')
-            .doc(user.id)
+            .doc(currentUser.uid)
             .collection('transaction')
             .onSnapshot((querySnapshot) => {
                 const tempPositions = [];
 
                 querySnapshot.forEach((docSnapshot) => {
                     tempPositions.push({ ...docSnapshot.data() });
+
+                    finnhubClient.quote(
+                        docSnapshot.data().symbol,
+                        (error, data, response) => {
+                            setQuotes([...quotes, data]);
+                        }
+                    );
                 });
 
                 setPositions(tempPositions);
             });
     }, []);
 
-    // Fetch stock api
-    const searchApi = async (symbol) => {
-        try {
-            const response = await axios.get(
-                `https://finnhub.io/api/v1/quote?symbol=${symbol}`,
-                {
-                    headers: {
-                        'X-Finnhub-Token': 'c1hm37n48v6q1s3o4krg',
-                    },
+    const createStockCard = ({ item, index }) => {
+        return (
+            <TouchableOpacity
+                onPress={() =>
+                    navigation.navigate('StockDetail', {
+                        name: item.name,
+                        quote: quotes[index],
+                    })
                 }
-            );
-
-            if (response) {
-                return response.data;
-            }
-        } catch (error) {
-            throw error;
-        }
+            >
+                <StockCard name={item.name} quote={quotes[index]} />
+            </TouchableOpacity>
+        );
     };
-
-    //const createStockCard = async ({ item }) => {};
 
     return (
         <View style={styles.root}>
@@ -69,30 +64,7 @@ export default function PortfolioScreen({ navigation }) {
                     `${data.name} ${data.price} ${data.share}`
                 }
                 data={positions}
-                renderItem={async ({ item }) => {
-                    try {
-                        const quote = await searchApi(item.symbol);
-
-                        return (
-                            <TouchableOpacity
-                                onPress={() =>
-                                    navigation.navigate('StockDetail', {
-                                        name: item.name,
-                                        quote,
-                                    })
-                                }
-                            >
-                                <StockCard
-                                    name={item.name}
-                                    current_price={quote.c}
-                                    average_price={25}
-                                />
-                            </TouchableOpacity>
-                        );
-                    } catch (error) {
-                        console.error(error);
-                    }
-                }}
+                renderItem={createStockCard}
             />
         </View>
     );

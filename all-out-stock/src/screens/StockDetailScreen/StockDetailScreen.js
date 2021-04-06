@@ -32,12 +32,26 @@ export default function StockDetailScreen(props) {
                 <Text style={styles.refresh}>Refresh</Text>
             </TouchableOpacity>
             <View style={styles.btnContainer}>
-                <TouchableOpacity style={styles.button} onPress={() =>
-                            props.navigation.navigate('Transaction', {stock,isBuying: true})}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() =>
+                        props.navigation.navigate('Transaction', {
+                            stock,
+                            isBuying: true,
+                        })
+                    }
+                >
                     <Text style={styles.btnText}>Buy</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() =>
-                            props.navigation.navigate('Transaction', {stock,isBuying: false})}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() =>
+                        props.navigation.navigate('Transaction', {
+                            stock,
+                            isBuying: false,
+                        })
+                    }
+                >
                     <Text style={styles.btnText}>Sell</Text>
                 </TouchableOpacity>
             </View>
