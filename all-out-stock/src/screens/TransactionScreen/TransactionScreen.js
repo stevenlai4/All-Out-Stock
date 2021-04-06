@@ -7,12 +7,11 @@ export default function TransactionScreen(props) {
     const [share, setShare] = useState(0)
     const [avgPrice, setAvgPrice] = useState(0)
     const [trade, setTrade] = useState(0)
-    const [user, setUser] = useState({})
+    const [uid, setUid] = useState('')
     const stock = props.route.params.stock;
     const isBuying = props.route.params.isBuying
     
     const db = firebase.firestore()
-    const uid = "mxwSUHgBlHTr9DEVlotqmEvRWFG3"
 
     var totalShare = 0
     var totalPrice = 0
@@ -20,7 +19,8 @@ export default function TransactionScreen(props) {
 
     useEffect(() => {
         const currUser = firebase.auth().currentUser;
-        console.log(currUser)
+        setUid(currUser.uid);
+
     }, []);
 
     const handleBuyTransaction = async () => {
