@@ -16,6 +16,11 @@ export default StyleSheet.create({
     name: {
         fontSize: 30,
     },
+    text: {
+        height: 40,
+        margin: 15,
+        borderWidth: 1,
+    },
     currentPrice: {
         fontSize: 25,
         marginBottom: 30,

@@ -25,7 +25,26 @@ const Stack = createStackNavigator();
 
 export default function App() {
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState(null);
+
+    
+
+    // const getUser = async() => {
+    //     try{
+    //         const documentSnapshot = await firestore()
+    //         .collection('users')
+    //         .doc(uid)
+    //         .get();
+
+    //         const userData = documentSnapshot.data();
+    //         setUser(userData);
+    //     }
+    //     catch (e) {
+    //         console.log('Error')
+    //     }
+    // };
+
+    
+
 
     // if (loading) {
     //   return (
@@ -66,7 +85,7 @@ export default function App() {
                     <Stack.Screen name="Root" component={NavigationScreen}  options={{headerShown: false}}/>                   
                     <Stack.Screen
                         name="StockDetail"
-                        component={StockDetailScreen}
+                        component={StockDetailScreen} 
                     />
                     <Stack.Screen name="Transaction" component={TransactionScreen} />
                 </Stack.Navigator>
