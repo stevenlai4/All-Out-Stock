@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import styles from './styles';
 import firebase from 'firebase'
@@ -7,17 +7,23 @@ export default function TransactionScreen(props) {
     const [share, setShare] = useState(0)
     const [avgPrice, setAvgPrice] = useState(0)
     const [trade, setTrade] = useState(0)
+    const [uid, setUid] = useState('')
     const stock = props.route.params.stock;
     const isBuying = props.route.params.isBuying
     
     const db = firebase.firestore()
-    const uid = "mxwSUHgBlHTr9DEVlotqmEvRWFG3"
 
     var totalShare = 0
     var totalPrice = 0
     var totalTrade = 50000
     var data = null
     var holdShare = 0
+
+    useEffect(() => {
+        const currUser = firebase.auth().currentUser;
+        setUid(currUser.uid);
+
+    }, []);
 
     const handleBuyTransaction = async () => {
         
