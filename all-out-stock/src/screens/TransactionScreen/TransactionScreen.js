@@ -5,8 +5,8 @@ import firebase from 'firebase'
 
 export default function TransactionScreen(props) {
     const [share, setShare] = useState(0)
-    const [avgPrice, setAvgPrice] = useState(0)
-    const [trade, setTrade] = useState(0)
+    const [initialPrice, setInitialPrice] = useState(0)
+    const [cash, setCash] = useState(0)
     const [uid, setUid] = useState('')
     const stock = props.route.params.stock;
     const isBuying = props.route.params.isBuying
@@ -15,15 +15,40 @@ export default function TransactionScreen(props) {
 
     var totalShare = 0
     var totalPrice = 0
-    var totalTrade = 50000
     var data = null
     var holdShare = 0
 
+    const handleGetCash = async (userId) => {
+        try {
+            const userCash = await db.collection("users").doc(userId).get();
+            setCash(userCash.data().cash);
+        }
+        catch(error) {
+            console.error(error);
+        }   
+    }
+
+    const handleGetAvgPrice = async (userId) => {
+        try {
+            const userInfo = await db.collection("users").doc(userId).collection("transactionSummary").where("name", "==", stock.name).get();
+            userInfo.forEach((info) => {
+                data = info.data().avgPrice
+            })
+            setInitialPrice(data);
+        }
+        catch(error) {
+            console.error(error);
+        }   
+    }
+
+    // CDM
     useEffect(() => {
         const currUser = firebase.auth().currentUser;
         setUid(currUser.uid);
-
-    }, []);
+        handleGetCash(currUser.uid);
+        handleGetAvgPrice(currUser.uid);
+    }, [])
+ 
 
     const handleBuyTransaction = async () => {
         
@@ -34,8 +59,10 @@ export default function TransactionScreen(props) {
             totalShare += transaction.data().share
             totalPrice += transaction.data().price * transaction.data().share
         })
-        setAvgPrice(totalPrice/totalShare)
-        setTrade(totalTrade-=totalPrice)
+        var tradePrice = stock.quote.c * share
+        var avgPrice = totalPrice/totalShare
+        await db.collection("users").doc(uid).update({cash: cash - tradePrice})
+        handleGetCash(uid);
         transactionSummarys.forEach((transactionSummary) => {
             data = transactionSummary.data().name
         })
@@ -60,8 +87,10 @@ export default function TransactionScreen(props) {
                 totalShare += transaction.data().share
                 totalPrice += transaction.data().price * transaction.data().share
             })
-            setAvgPrice(totalPrice/totalShare)
-            setTrade(totalTrade-=totalPrice)
+            var tradePrice = stock.quote.c * share
+            var avgPrice = totalPrice/totalShare
+            await db.collection("users").doc(uid).update({cash: cash + tradePrice})
+            handleGetCash(uid);
             await db.collection("users").doc(uid).collection("transactionSummary").doc(stock.name).update({avgPrice: avgPrice, shareTotal: totalShare});
         }
         else {
@@ -79,21 +108,27 @@ export default function TransactionScreen(props) {
             <Text>
                 {stock.name} Price: ${stock.quote.c}
             </Text>
+            {   
+                initialPrice &&
+                <Text>
+                Average cost/share: ${initialPrice}
+                </Text> ||
+                <Text>
+                    Average cost/share: not yet purchased
+                </Text>
+            }
             <Text>
-                Average cost/share: ${avgPrice}
-            </Text>
-            <Text>
-                Available to trade: ${trade}
+                Available to trade: ${cash}
             </Text>
 
 
             <View style={styles.btnContainer}>
                 {
                     isBuying &&
-                    <TouchableOpacity style={styles.button} onPress={()=>{handleBuyTransaction()}}>
+                    <TouchableOpacity style={styles.button} onPress={handleBuyTransaction}>
                         <Text style={styles.btnText}>Buy</Text>
                     </TouchableOpacity> ||
-                    <TouchableOpacity style={styles.button} onPress={()=>{handleSellTransaction()}}>
+                    <TouchableOpacity style={styles.button} onPress={handleSellTransaction}>
                     <Text style={styles.btnText}>Sell</Text>
                 </TouchableOpacity>
                 }
