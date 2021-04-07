@@ -11,7 +11,6 @@ export default function PortfolioScreen({ navigation }) {
     const [positions, setPositions] = useState([]);
     const [quotes, setQuotes] = useState([]);
     const [cash, setCash] = useState(0.0);
-    const [portfolioValue, setPortfolioValue] = useState(0.0)
     const db = firebase.firestore();
     const isFocused = useIsFocused();
 
@@ -28,6 +27,15 @@ export default function PortfolioScreen({ navigation }) {
         } catch (error) {
             console.error(error);
         }
+    }
+    
+    const calcPortfolioValue = () => {
+        var initialValue = 0
+        positions.forEach((position) => {
+            const quote = quotes.find((quote) => quote.symbol === position.symbol); 
+            initialValue += quote?.c * position.shareTotal
+        })
+        return cash + initialValue
     }
 
     // CDM
@@ -51,9 +59,10 @@ export default function PortfolioScreen({ navigation }) {
 
                     setPositions(tempPositions);
                 });
-            calcPortfolioValue();
         })();
     }, [isFocused]);
+
+
 
     useEffect(() => {
         if (positions) {
@@ -71,14 +80,7 @@ export default function PortfolioScreen({ navigation }) {
         }
     }, [positions]);
 
-    const calcPortfolioValue = () => {
-        var initialValue = 0
-        positions.forEach((position) => {
-            const quote = quotes.find((quote) => quote.symbol === position.symbol); 
-            initialValue += quote.c * position.shareTotal
-        })
-        setPortfolioValue(cash + initialValue)
-    }
+    
 
     const createStockCard = ({ item }) => {
         const quote = quotes.find((quote) => quote.symbol === item.symbol);
@@ -109,7 +111,8 @@ export default function PortfolioScreen({ navigation }) {
                 Your personal account has: ${cash.toFixed(2)}
             </Text>
             <Text style={styles.portfolioText}>Portfolio:</Text>
-            <Text>portfolio value: {(portfolioValue).toFixed(2)}</Text>
+
+            <Text>portfolio value: {calcPortfolioValue().toFixed(2)}</Text>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(data) =>

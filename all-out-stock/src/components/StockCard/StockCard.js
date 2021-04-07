@@ -4,7 +4,7 @@ import styles from './styles';
 
 export default function StockCard({ name, shareTotal, avgPrice, quote }) {
     const calcProfitLoss = () => {
-        const calcResult = avgPrice * shareTotal - quote?.c * shareTotal;
+        const calcResult =  quote?.c * shareTotal - avgPrice * shareTotal;
 
         if (calcResult > 0) {
             return <Text>Profit: {calcResult.toFixed(2)}</Text>;
