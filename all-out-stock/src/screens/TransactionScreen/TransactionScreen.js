@@ -45,6 +45,7 @@ export default function TransactionScreen(props) {
         handleGetCash(currUser.uid);
         handleGetAvgPrice(currUser.uid);
     }, []);
+
     const handleBuyTransaction = async () => {
         await db
             .collection('users')
@@ -73,6 +74,7 @@ export default function TransactionScreen(props) {
         });
         var tradePrice = stock.quote.c * share;
         var avgPrice = totalPrice / totalShare;
+
         await db
             .collection('users')
             .doc(uid)
@@ -93,6 +95,7 @@ export default function TransactionScreen(props) {
                     symbol: stock.symbol,
                     shareTotal: totalShare,
                 });
+            handleGetAvgPrice(uid);
         } else {
             await db
                 .collection('users')
@@ -100,6 +103,7 @@ export default function TransactionScreen(props) {
                 .collection('transactionSummary')
                 .doc(stock.name)
                 .update({ avgPrice: avgPrice, shareTotal: totalShare });
+            handleGetAvgPrice(uid);
         }
     };
     const handleSellTransaction = async () => {
@@ -146,6 +150,7 @@ export default function TransactionScreen(props) {
                 .collection('transactionSummary')
                 .doc(stock.name)
                 .update({ avgPrice: avgPrice, shareTotal: totalShare });
+            handleGetAvgPrice(uid);
         } else {
             alert("You don't have enough share to sell");
         }
@@ -163,12 +168,12 @@ export default function TransactionScreen(props) {
                 {' '}
             </TextInput>
             <Text>
-                {stock.name} Price: ${stock.quote.c}
+                {stock.name} Price: ${stock.quote.c.toFixed(2)}
             </Text>
             {(initialPrice && (
-                <Text>Average cost/share: ${initialPrice}</Text>
+                <Text>Average cost/share: ${initialPrice.toFixed(2)}</Text>
             )) || <Text>Average cost/share: not yet purchased</Text>}
-            <Text>Available to trade: ${cash}</Text>
+            <Text>Available to trade: ${cash.toFixed(2)}</Text>
             <View style={styles.btnContainer}>
                 {(isBuying && (
                     <TouchableOpacity
