@@ -11,6 +11,7 @@ export default function PortfolioScreen({ navigation }) {
     const [positions, setPositions] = useState([]);
     const [quotes, setQuotes] = useState([]);
     const [cash, setCash] = useState(0.0);
+    const [portfolioValue, setPortfolioValue] = useState(0.0)
     const db = firebase.firestore();
 
     // CDM
@@ -64,8 +65,14 @@ export default function PortfolioScreen({ navigation }) {
         }
     }, [positions]);
 
+    const calcValue = (shareTotal, currPrice) => {
+        var initialValue = 0
+        setPortfolioValue(initialValue += shareTotal * currPrice)
+    }
+
     const createStockCard = ({ item }) => {
         const quote = quotes.find((quote) => quote.symbol === item.symbol);
+        calcValue(item.shareTotal,quote?.c)
 
         return (
             <TouchableOpacity
@@ -93,6 +100,8 @@ export default function PortfolioScreen({ navigation }) {
                 Your personal account has: ${cash.toFixed(2)}
             </Text>
             <Text style={styles.portfolioText}>Portfolio:</Text>
+            {console.log(portfolioValue)}
+            <Text>portfolio value: {(cash+portfolioValue).toFixed(2)}</Text>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(data) =>
