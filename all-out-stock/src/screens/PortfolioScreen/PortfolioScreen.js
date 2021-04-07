@@ -110,9 +110,10 @@ export default function PortfolioScreen({ navigation }) {
             <Text style={[styles.userCashText, styles.centerText]}>
                 Your personal account has: ${cash.toFixed(2)}
             </Text>
+            <Text style={[styles.userCashText, styles.centerText]}>
+                portfolio value: ${calcPortfolioValue().toFixed(2)}
+            </Text>
             <Text style={styles.portfolioText}>Portfolio:</Text>
-
-            <Text>portfolio value: {calcPortfolioValue().toFixed(2)}</Text>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(data) =>
