@@ -5,48 +5,82 @@ import StockCard from '../../components/StockCard/StockCard';
 import styles from './styles';
 import firebase from 'firebase';
 import { finnhubClient } from '../../finnhub/config';
+// import axios from 'axios';
 
 export default function PortfolioScreen({ navigation }) {
     const [positions, setPositions] = useState([]);
     const [quotes, setQuotes] = useState([]);
+    const [cash, setCash] = useState(0.0);
     const db = firebase.firestore();
 
     // CDM
     useEffect(() => {
-        const currentUser = firebase.auth().currentUser;
+        (async () => {
+            // Get user auth from firestore auth
+            const currentUser = firebase.auth().currentUser;
 
-        db.collection('users')
-            .doc(currentUser.uid)
-            .collection('transaction')
-            .onSnapshot((querySnapshot) => {
-                const tempPositions = [];
+            try {
+                // Get user info from firestore database
+                const tempUser = await db
+                    .collection('users')
+                    .doc(currentUser.uid)
+                    .get();
 
-                querySnapshot.forEach((docSnapshot) => {
-                    tempPositions.push({ ...docSnapshot.data() });
+                // Set the user cash state
+                setCash(tempUser.data().cash);
+            } catch (error) {
+                console.error(error);
+            }
 
-                    finnhubClient.quote(
-                        docSnapshot.data().symbol,
-                        (error, data, response) => {
-                            setQuotes([...quotes, data]);
-                        }
-                    );
+            // Set stock quotes and user positions
+            db.collection('users')
+                .doc(currentUser.uid)
+                .collection('transactionSummary')
+                .onSnapshot((querySnapshot) => {
+                    let tempPositions = [];
+
+                    querySnapshot.forEach((docSnapshot) => {
+                        tempPositions.push({ ...docSnapshot.data() });
+                    });
+
+                    setPositions(tempPositions);
                 });
-
-                setPositions(tempPositions);
-            });
+        })();
     }, []);
 
-    const createStockCard = ({ item, index }) => {
+    useEffect(() => {
+        if (positions) {
+            positions.forEach((position) => {
+                finnhubClient.quote(
+                    position.symbol,
+                    (error, data, response) => {
+                        setQuotes((prev) => [
+                            ...prev,
+                            { ...data, symbol: position.symbol },
+                        ]);
+                    }
+                );
+            });
+        }
+    }, [positions]);
+
+    const createStockCard = ({ item }) => {
+        const quote = quotes.find((quote) => quote.symbol === item.symbol);
+
         return (
             <TouchableOpacity
                 onPress={() =>
                     navigation.navigate('StockDetail', {
                         name: item.name,
-                        quote: quotes[index],
+                        quote,
                     })
                 }
             >
-                <StockCard name={item.name} quote={quotes[index]} />
+                <StockCard
+                    name={item.name}
+                    avgPrice={item.avgPrice}
+                    quote={quote}
+                />
             </TouchableOpacity>
         );
     };
@@ -55,7 +89,7 @@ export default function PortfolioScreen({ navigation }) {
         <View style={styles.root}>
             <Text style={[styles.logo, styles.centerText]}>All Out Stock</Text>
             <Text style={[styles.userCashText, styles.centerText]}>
-                Your personal account has: ${user.cash.toFixed(2)}
+                Your personal account has: ${cash.toFixed(2)}
             </Text>
             <Text style={styles.portfolioText}>Portfolio:</Text>
             <FlatList

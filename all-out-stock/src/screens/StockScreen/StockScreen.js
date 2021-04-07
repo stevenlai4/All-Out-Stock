@@ -43,8 +43,8 @@ export default function StockScreen(props) {
                 >
                     <StockCard
                         name={name}
-                        current_price={quote.c}
-                        average_price={(quote.h + quote.l) / 2}
+                        avgPrice={(quote.h + quote.l) / 2}
+                        quote={quote}
                     />
                 </TouchableOpacity>
             )}
