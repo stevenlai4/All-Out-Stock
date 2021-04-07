@@ -79,6 +79,7 @@ export default function PortfolioScreen({ navigation }) {
                 <StockCard
                     name={item.name}
                     avgPrice={item.avgPrice}
+                    shareTotal={item.shareTotal}
                     quote={quote}
                 />
             </TouchableOpacity>
