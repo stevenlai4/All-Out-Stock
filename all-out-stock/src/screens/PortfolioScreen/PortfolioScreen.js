@@ -5,7 +5,7 @@ import StockCard from '../../components/StockCard/StockCard';
 import styles from './styles';
 import firebase from 'firebase';
 import { finnhubClient } from '../../finnhub/config';
-// import axios from 'axios';
+import { useIsFocused } from '@react-navigation/native'
 
 export default function PortfolioScreen({ navigation }) {
     const [positions, setPositions] = useState([]);
@@ -13,6 +13,22 @@ export default function PortfolioScreen({ navigation }) {
     const [cash, setCash] = useState(0.0);
     const [portfolioValue, setPortfolioValue] = useState(0.0)
     const db = firebase.firestore();
+    const isFocused = useIsFocused();
+
+    const getUserCash = async (uid) => {
+        try {
+            // Get user info from firestore database
+            const tempUser = await db
+                .collection('users')
+                .doc(uid)
+                .get();
+
+            // Set the user cash state
+            setCash(tempUser.data().cash);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     // CDM
     useEffect(() => {
@@ -20,18 +36,7 @@ export default function PortfolioScreen({ navigation }) {
             // Get user auth from firestore auth
             const currentUser = firebase.auth().currentUser;
 
-            try {
-                // Get user info from firestore database
-                const tempUser = await db
-                    .collection('users')
-                    .doc(currentUser.uid)
-                    .get();
-
-                // Set the user cash state
-                setCash(tempUser.data().cash);
-            } catch (error) {
-                console.error(error);
-            }
+            await getUserCash(currentUser.uid)
 
             // Set stock quotes and user positions
             db.collection('users')
@@ -46,8 +51,9 @@ export default function PortfolioScreen({ navigation }) {
 
                     setPositions(tempPositions);
                 });
+            calcPortfolioValue();
         })();
-    }, []);
+    }, [isFocused]);
 
     useEffect(() => {
         if (positions) {
@@ -65,14 +71,17 @@ export default function PortfolioScreen({ navigation }) {
         }
     }, [positions]);
 
-    const calcValue = (shareTotal, currPrice) => {
+    const calcPortfolioValue = () => {
         var initialValue = 0
-        setPortfolioValue(initialValue += shareTotal * currPrice)
+        positions.forEach((position) => {
+            const quote = quotes.find((quote) => quote.symbol === position.symbol); 
+            initialValue += quote.c * position.shareTotal
+        })
+        setPortfolioValue(cash + initialValue)
     }
 
     const createStockCard = ({ item }) => {
         const quote = quotes.find((quote) => quote.symbol === item.symbol);
-        calcValue(item.shareTotal,quote?.c)
 
         return (
             <TouchableOpacity
@@ -100,8 +109,7 @@ export default function PortfolioScreen({ navigation }) {
                 Your personal account has: ${cash.toFixed(2)}
             </Text>
             <Text style={styles.portfolioText}>Portfolio:</Text>
-            {console.log(portfolioValue)}
-            <Text>portfolio value: {(cash+portfolioValue).toFixed(2)}</Text>
+            <Text>portfolio value: {(portfolioValue).toFixed(2)}</Text>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(data) =>
